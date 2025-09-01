@@ -1,5 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Keep overflow hidden for the game */
+}
+
 body {
   background-color: #000;
   color: #fff;
@@ -8,9 +15,9 @@ body {
 }
 
 .game-container {
-  position: relative;
-  height: 100vh;
-  width: 100vw;
+  position: relative; /* Revert to relative positioning */
+  height: 100vh; /* Fill viewport height */
+  width: 100vw; /* Fill viewport width */
   overflow: hidden;
   border: 0.8vmin solid #fff;
   box-sizing: border-box;
@@ -116,6 +123,8 @@ body {
   cursor: pointer;
   user-select: none; /* Prevent text selection on touch */
   -webkit-tap-highlight-color: transparent; /* Remove tap highlight on iOS */
+  pointer-events: auto; /* Ensure button receives touch events */
+  touch-action: manipulation; /* Prevent default browser behaviors */
 }
 
 .control-button:active {

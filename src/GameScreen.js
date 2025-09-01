@@ -40,6 +40,7 @@ function GameScreen({ settings }) {
   const INITIAL_TARGET_SIZE = getScaledValue(70, dimensions.width, BASE_WIDTH);
   const PLAYER_BOTTOM_PADDING = getScaledValue(10, dimensions.height, BASE_HEIGHT);
   const PROJECTILE_FONT_SIZE = getScaledValue(20, dimensions.height, BASE_HEIGHT);
+  const MOBILE_CONTROLS_HEIGHT = getScaledValue(100, dimensions.height, BASE_HEIGHT); // Estimated height of mobile controls
 
   const spawnTarget = useCallback(() => {
     if (dimensions.width === 0) return;
@@ -52,11 +53,19 @@ function GameScreen({ settings }) {
     setScore(0);
     setLives(INITIAL_LIVES);
     difficultyTier.current = 1;
-    if (dimensions.width > 0) player.current = { x: dimensions.width / 2 - PLAYER_WIDTH / 2, y: dimensions.height - PLAYER_HEIGHT - PLAYER_BOTTOM_PADDING };
+    if (dimensions.width > 0) player.current = { x: dimensions.width / 2 - PLAYER_WIDTH / 2, y: dimensions.height - PLAYER_HEIGHT - PLAYER_BOTTOM_PADDING - MOBILE_CONTROLS_HEIGHT };
     targets.current = [];
     projectiles.current = [];
     setGameState('ready');
-  }, [dimensions.width, dimensions.height, setScore, setLives, setGameState, PLAYER_WIDTH, PLAYER_HEIGHT, PLAYER_BOTTOM_PADDING]);
+  }, [dimensions.width, dimensions.height, setScore, setLives, setGameState, PLAYER_WIDTH, PLAYER_HEIGHT, PLAYER_BOTTOM_PADDING, MOBILE_CONTROLS_HEIGHT]);
+
+  const handleTouchStart = useCallback((key) => {
+    keys.current[key] = true;
+  }, []);
+
+  const handleTouchEnd = useCallback((key) => {
+    keys.current[key] = false;
+  }, []);
 
   // --- KURULUM ---
 
@@ -229,9 +238,9 @@ function GameScreen({ settings }) {
 
       {/* Mobile Controls */}
       <div className="mobile-controls">
-        <button className="control-button left-button" onTouchStart={() => keys.current.left = true} onTouchEnd={() => keys.current.left = false}>&lt;</button>
-        <button className="control-button fire-button" onTouchStart={() => keys.current.space = true} onTouchEnd={() => keys.current.space = false}>🔥</button>
-        <button className="control-button right-button" onTouchStart={() => keys.current.right = true} onTouchEnd={() => keys.current.right = false}>&gt;</button>
+        <button className="control-button left-button" onTouchStart={() => handleTouchStart('left')} onTouchEnd={() => handleTouchEnd('left')}>&lt;</button>
+        <button className="control-button fire-button" onTouchStart={() => handleTouchStart('space')} onTouchEnd={() => handleTouchEnd('space')}>🔥</button>
+        <button className="control-button right-button" onTouchStart={() => handleTouchStart('right')} onTouchEnd={() => handleTouchEnd('right')}>&gt;</button>
       </div>
     </div>
   );
