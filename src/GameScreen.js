@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 
 // --- OYUN SABİTLERİ ---
 const PLAYER_WIDTH = 40;
@@ -32,6 +32,23 @@ function GameScreen({ settings }) {
   const isAudioUnlocked = useRef(false);
 
   const projectileSymbol = settings.projectile === 'cicek' ? '🌸' : '🪴';
+
+  const spawnTarget = useCallback(() => {
+    if (dimensions.width === 0) return;
+    const size = INITIAL_TARGET_SIZE;
+    const speed = 1.5 + (difficultyTier.current * 0.5);
+    targets.current.push({ x: Math.random() * (dimensions.width - size), y: 0 - size, vy: speed, size: size });
+  }, [dimensions.width]);
+
+  const restartGame = useCallback(() => {
+    setScore(0);
+    setLives(INITIAL_LIVES);
+    difficultyTier.current = 1;
+    if (dimensions.width > 0) player.current = { x: dimensions.width / 2 - PLAYER_WIDTH / 2, y: dimensions.height - PLAYER_HEIGHT - 10 };
+    targets.current = [];
+    projectiles.current = [];
+    setGameState('ready');
+  }, [dimensions.width, dimensions.height, setScore, setLives, setGameState]);
 
   // --- KURULUM ---
 
@@ -71,7 +88,7 @@ function GameScreen({ settings }) {
 
   useEffect(() => {
     if (dimensions.width > 0 && gameState === 'loading') restartGame();
-  }, [dimensions, gameState]);
+  }, [dimensions, gameState, restartGame]);
 
   useEffect(() => {
     if (lives <= 0 && gameState === 'ready') {
@@ -94,24 +111,7 @@ function GameScreen({ settings }) {
     };
     spawnLogic();
     return () => clearInterval(difficultyTimer);
-  }, [gameState]);
-
-  const spawnTarget = () => {
-    if (dimensions.width === 0) return;
-    const size = INITIAL_TARGET_SIZE;
-    const speed = 1.5 + (difficultyTier.current * 0.5);
-    targets.current.push({ x: Math.random() * (dimensions.width - size), y: 0 - size, vy: speed, size: size });
-  };
-
-  const restartGame = () => {
-    setScore(0);
-    setLives(INITIAL_LIVES);
-    difficultyTier.current = 1;
-    if (dimensions.width > 0) player.current = { x: dimensions.width / 2 - PLAYER_WIDTH / 2, y: dimensions.height - PLAYER_HEIGHT - 10 };
-    targets.current = [];
-    projectiles.current = [];
-    setGameState('ready');
-  };
+  }, [gameState, spawnTarget]);
 
   const playSound = (soundName) => {
     const sound = sounds.current[soundName];
