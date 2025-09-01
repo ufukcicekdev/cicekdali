@@ -40,7 +40,7 @@ function GameScreen({ settings }) {
   const INITIAL_TARGET_SIZE = getScaledValue(70, dimensions.width, BASE_WIDTH);
   const PLAYER_BOTTOM_PADDING = getScaledValue(10, dimensions.height, BASE_HEIGHT);
   const PROJECTILE_FONT_SIZE = getScaledValue(20, dimensions.height, BASE_HEIGHT);
-  const MOBILE_CONTROLS_HEIGHT = getScaledValue(150, dimensions.height, BASE_HEIGHT); // Estimated height of mobile controls
+  const MOBILE_CONTROLS_HEIGHT = getScaledValue(200, dimensions.height, BASE_HEIGHT); // Estimated height of mobile controls
 
   const spawnTarget = useCallback(() => {
     if (dimensions.width === 0) return;
