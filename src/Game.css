@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+body {
+  background-color: #000;
+  color: #fff;
+  font-family: 'Press Start 2P', cursive;
+  overflow: hidden;
+}
+
+.game-container {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  border: 5px solid #fff;
+  box-sizing: border-box;
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #111;
+  border-bottom: 5px solid #fff;
+}
+
+.game-stats-left,
+.game-stats-right {
+  flex: 1;
+}
+
+.game-stats-right {
+  text-align: right;
+}
+
+.game-target {
+  position: absolute;
+  background-color: #f00; /* Parlak kırmızı */
+  border: 4px solid #fff;
+  /* YENİ: Yuvarlak ve daha büyük */
+  border-radius: 50%;
+  image-rendering: pixelated;
+}
+
+.default-target {
+  /* Varsayılan hedef için ek stiller */
+}
+
+.projectile {
+  position: absolute;
+  will-change: transform;
+  user-select: none;
+  text-shadow: 2px 2px #000;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.overlay h1 {
+    font-size: 48px;
+    color: #f00;
+    text-shadow: 4px 4px #000;
+}
+
+.overlay h2 {
+    font-size: 24px;
+    margin: 20px 0;
+}
+
+.overlay button {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 20px;
+    color: #000;
+    background-color: #fff;
+    border: 3px solid #000;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.overlay button:hover {
+    background-color: #ccc;
+}
