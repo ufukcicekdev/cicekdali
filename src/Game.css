@@ -144,3 +144,10 @@ body {
     display: flex;
   }
 }
+
+.health-item {
+  position: absolute;
+  font-size: 4vmin; /* Adjust size as needed */
+  text-shadow: 0.3vmin 0.3vmin #000;
+  user-select: none;
+}
