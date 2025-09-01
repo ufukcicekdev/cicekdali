@@ -20,6 +20,8 @@ function GameScreen({ settings }) {
 
   // --- Refs ---
   const gameAreaRef = useRef(null);
+  const mobileControlsRef = useRef(null);
+  const [mobileControlsHeight, setMobileControlsHeight] = useState(0);
   const keys = useRef({ left: false, right: false, space: false });
   const player = useRef({ x: 0, y: 0 });
   const projectiles = useRef([]);
@@ -39,7 +41,7 @@ function GameScreen({ settings }) {
   const PROJECTILE_SPEED = getScaledValue(15, dimensions.height, BASE_HEIGHT); // Scale speed based on height
   const INITIAL_TARGET_SIZE = getScaledValue(70, dimensions.width, BASE_WIDTH);
   const PLAYER_BOTTOM_PADDING = getScaledValue(50, dimensions.height, BASE_HEIGHT);
-  const MOBILE_CONTROLS_ESTIMATED_HEIGHT = getScaledValue(70, dimensions.height, BASE_HEIGHT); // Estimated height of mobile controls for player offset
+  
   const PROJECTILE_FONT_SIZE = getScaledValue(20, dimensions.height, BASE_HEIGHT);
   
 
@@ -54,11 +56,11 @@ function GameScreen({ settings }) {
     setScore(0);
     setLives(INITIAL_LIVES);
     difficultyTier.current = 1;
-    if (dimensions.width > 0) player.current = { x: dimensions.width / 2 - PLAYER_WIDTH / 2, y: dimensions.height - PLAYER_HEIGHT - PLAYER_BOTTOM_PADDING - MOBILE_CONTROLS_ESTIMATED_HEIGHT };
+    if (dimensions.width > 0) player.current = { x: dimensions.width / 2 - PLAYER_WIDTH / 2, y: dimensions.height - PLAYER_HEIGHT - PLAYER_BOTTOM_PADDING - mobileControlsHeight };
     targets.current = [];
     projectiles.current = [];
     setGameState('ready');
-  }, [dimensions.width, dimensions.height, setScore, setLives, setGameState, PLAYER_WIDTH, PLAYER_HEIGHT, PLAYER_BOTTOM_PADDING, MOBILE_CONTROLS_ESTIMATED_HEIGHT]);
+  }, [dimensions.width, dimensions.height, setScore, setLives, setGameState, PLAYER_WIDTH, PLAYER_HEIGHT, PLAYER_BOTTOM_PADDING, mobileControlsHeight]);
 
   const handleTouchStart = useCallback((key) => {
     keys.current[key] = true;
@@ -107,6 +109,12 @@ function GameScreen({ settings }) {
   useEffect(() => {
     if (dimensions.width > 0 && gameState === 'loading') restartGame();
   }, [dimensions, gameState, restartGame]);
+
+  useEffect(() => {
+    if (mobileControlsRef.current) {
+      setMobileControlsHeight(mobileControlsRef.current.offsetHeight);
+    }
+  }, [dimensions.height]);
 
   useEffect(() => {
     if (lives <= 0 && gameState === 'ready') {
@@ -238,7 +246,7 @@ function GameScreen({ settings }) {
       </div>
 
       {/* Mobile Controls */}
-      <div className="mobile-controls">
+      <div className="mobile-controls" ref={mobileControlsRef}>
         <button className="control-button left-button" onTouchStart={() => handleTouchStart('left')} onTouchEnd={() => handleTouchEnd('left')}>&lt;</button>
         <button className="control-button fire-button" onTouchStart={() => handleTouchStart('space')} onTouchEnd={() => handleTouchEnd('space')}>🔥</button>
         <button className="control-button right-button" onTouchStart={() => handleTouchStart('right')} onTouchEnd={() => handleTouchEnd('right')}>&gt;</button>
