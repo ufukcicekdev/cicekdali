@@ -102,12 +102,12 @@ body {
 
 .mobile-controls {
   position: absolute;
-  bottom: 0;
+  bottom: 100px;
   left: 0;
   width: 100%;
   display: flex;
   justify-content: space-around;
-  padding: 2vmin;
+  padding: 10vmin;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 1000;
   padding-bottom: env(safe-area-inset-bottom); /* Account for safe areas on modern mobile devices */

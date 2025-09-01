@@ -38,8 +38,8 @@ function GameScreen({ settings }) {
   const PROJECTILE_HEIGHT = getScaledValue(30, dimensions.height, BASE_HEIGHT);
   const PROJECTILE_SPEED = getScaledValue(15, dimensions.height, BASE_HEIGHT); // Scale speed based on height
   const INITIAL_TARGET_SIZE = getScaledValue(70, dimensions.width, BASE_WIDTH);
-  const PLAYER_BOTTOM_PADDING = getScaledValue(10, dimensions.height, BASE_HEIGHT);
-  const MOBILE_CONTROLS_ESTIMATED_HEIGHT = getScaledValue(120, dimensions.height, BASE_HEIGHT); // Estimated height of mobile controls for player offset
+  const PLAYER_BOTTOM_PADDING = getScaledValue(50, dimensions.height, BASE_HEIGHT);
+  const MOBILE_CONTROLS_ESTIMATED_HEIGHT = getScaledValue(70, dimensions.height, BASE_HEIGHT); // Estimated height of mobile controls for player offset
   const PROJECTILE_FONT_SIZE = getScaledValue(20, dimensions.height, BASE_HEIGHT);
   
 
