@@ -1,14 +1,12 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 
 // --- OYUN SABİTLERİ ---
-const PLAYER_WIDTH = 40;
-const PLAYER_HEIGHT = 40;
-const PLAYER_SPEED = 5;
-const PROJECTILE_WIDTH = 10;
-const PROJECTILE_HEIGHT = 30;
-const PROJECTILE_SPEED = 15;
+const BASE_WIDTH = 800;
+const BASE_HEIGHT = 600;
+
+const getScaledValue = (value, dimension, baseDimension) => (value / baseDimension) * dimension;
+
 const INITIAL_LIVES = 3;
-const INITIAL_TARGET_SIZE = 70;
 const FIRE_COOLDOWN = 200;
 
 function GameScreen({ settings }) {
@@ -33,22 +31,32 @@ function GameScreen({ settings }) {
 
   const projectileSymbol = settings.projectile === 'cicek' ? '🌸' : '🪴';
 
+  const PLAYER_WIDTH = getScaledValue(40, dimensions.width, BASE_WIDTH);
+  const PLAYER_HEIGHT = getScaledValue(40, dimensions.height, BASE_HEIGHT);
+  const PLAYER_SPEED = getScaledValue(5, dimensions.width, BASE_WIDTH); // Scale speed based on width
+  const PROJECTILE_WIDTH = getScaledValue(10, dimensions.width, BASE_WIDTH);
+  const PROJECTILE_HEIGHT = getScaledValue(30, dimensions.height, BASE_HEIGHT);
+  const PROJECTILE_SPEED = getScaledValue(15, dimensions.height, BASE_HEIGHT); // Scale speed based on height
+  const INITIAL_TARGET_SIZE = getScaledValue(70, dimensions.width, BASE_WIDTH);
+  const PLAYER_BOTTOM_PADDING = getScaledValue(10, dimensions.height, BASE_HEIGHT);
+  const PROJECTILE_FONT_SIZE = getScaledValue(20, dimensions.height, BASE_HEIGHT);
+
   const spawnTarget = useCallback(() => {
     if (dimensions.width === 0) return;
     const size = INITIAL_TARGET_SIZE;
-    const speed = 1.5 + (difficultyTier.current * 0.5);
+    const speed = getScaledValue(1.5 + (difficultyTier.current * 0.5), dimensions.height, BASE_HEIGHT);
     targets.current.push({ x: Math.random() * (dimensions.width - size), y: 0 - size, vy: speed, size: size });
-  }, [dimensions.width]);
+  }, [dimensions.width, INITIAL_TARGET_SIZE, dimensions.height]);
 
   const restartGame = useCallback(() => {
     setScore(0);
     setLives(INITIAL_LIVES);
     difficultyTier.current = 1;
-    if (dimensions.width > 0) player.current = { x: dimensions.width / 2 - PLAYER_WIDTH / 2, y: dimensions.height - PLAYER_HEIGHT - 10 };
+    if (dimensions.width > 0) player.current = { x: dimensions.width / 2 - PLAYER_WIDTH / 2, y: dimensions.height - PLAYER_HEIGHT - PLAYER_BOTTOM_PADDING };
     targets.current = [];
     projectiles.current = [];
     setGameState('ready');
-  }, [dimensions.width, dimensions.height, setScore, setLives, setGameState]);
+  }, [dimensions.width, dimensions.height, setScore, setLives, setGameState, PLAYER_WIDTH, PLAYER_HEIGHT, PLAYER_BOTTOM_PADDING]);
 
   // --- KURULUM ---
 
@@ -180,7 +188,7 @@ function GameScreen({ settings }) {
 
     const animationId = setInterval(gameLoop, 1000 / 60);
     return () => clearInterval(animationId);
-  }, [gameState, dimensions]);
+  }, [gameState, dimensions, PLAYER_SPEED, PLAYER_WIDTH, PROJECTILE_HEIGHT, PROJECTILE_SPEED, PROJECTILE_WIDTH]);
 
   // --- RENDER ---
 
@@ -212,11 +220,18 @@ function GameScreen({ settings }) {
       ))}
 
       {projectiles.current.map((p, i) => (
-          <div key={i} className="projectile" style={{ left: p.x, top: p.y, width: PROJECTILE_WIDTH, height: PROJECTILE_HEIGHT, fontSize: 20 }}>{projectileSymbol}</div>
+          <div key={i} className="projectile" style={{ left: p.x, top: p.y, width: PROJECTILE_WIDTH, height: PROJECTILE_HEIGHT, fontSize: PROJECTILE_FONT_SIZE }}>{projectileSymbol}</div>
       ))}
 
       <div className="projectile" style={{ left: player.current.x, top: player.current.y, fontSize: PLAYER_WIDTH }}>
         {projectileSymbol}
+      </div>
+
+      {/* Mobile Controls */}
+      <div className="mobile-controls">
+        <button className="control-button left-button" onTouchStart={() => keys.current.left = true} onTouchEnd={() => keys.current.left = false}>&lt;</button>
+        <button className="control-button fire-button" onTouchStart={() => keys.current.space = true} onTouchEnd={() => keys.current.space = false}>🔥</button>
+        <button className="control-button right-button" onTouchStart={() => keys.current.right = true} onTouchEnd={() => keys.current.right = false}>&gt;</button>
       </div>
     </div>
   );
